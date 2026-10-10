@@ -1,0 +1,442 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   FILM NOIR GOLD — Design System
+   Bg:   #0B0B0C   Elevated: #131314   Card: #1A1A1C
+   Text: #EDEAE3   Muted:    #8A8680
+   Gold: #D4AF6A   Sand:     #B8965A   Dim: rgba(212,175,106,0.15)
+   REC:  #E5484D
+   Font: Satoshi (500, 600, 700)
+───────────────────────────────────────────────────────────────────────────── */
+:root {
+  --font-satoshi:        'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-space-grotesk:  var(--font-satoshi);
+  --font-manrope:        var(--font-satoshi);
+  --bg-base:      #0B0B0C;
+  --bg-elevated:  #131314;
+  --bg-card:      #1A1A1C;
+  --text-primary: #EDEAE3;
+  --text-muted:   #8A8680;
+  --gold:         #D4AF6A;
+  --gold-sand:    #B8965A;
+  --gold-dim:     rgba(212, 175, 106, 0.15);
+  --rec-red:      #E5484D;
+  --mouse-x: 50vw;
+  --mouse-y: 50vh;
+}
+
+/* ── Reset ───────────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+html {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  scroll-behavior: auto !important;
+}
+
+@media (pointer: fine) {
+  body, a, button, input, textarea, select { cursor: none !important; }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-satoshi), -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection      { background: var(--gold); color: var(--bg-base); }
+::-moz-selection { background: var(--gold); color: var(--bg-base); }
+
+/* ── Film noise overlay ──────────────────────────────────────────────────── */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* ── Viewport film frame ─────────────────────────────────────────────────── */
+.film-frame-border {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 90;
+}
+.film-frame-border::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(212, 175, 106, 0.06);
+  border-top-color:    rgba(212, 175, 106, 0.12);
+  border-bottom-color: rgba(212, 175, 106, 0.12);
+}
+@media (max-width: 768px) { .film-frame-border { display: none; } }
+
+/* ── Typography ──────────────────────────────────────────────────────────── */
+.font-display { font-family: var(--font-satoshi), sans-serif; }
+.font-satoshi { font-family: var(--font-satoshi), sans-serif; }
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: rgba(212,175,106,0.18); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* ── 3D perspective ──────────────────────────────────────────────────────── */
+.perspective-container { perspective: 1200px; }
+
+/* ── Lenis ───────────────────────────────────────────────────────────────── */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-scrolling iframe { pointer-events: none; }
+
+/* ── Marquee ─────────────────────────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+  will-change: transform;
+}
+.animate-marquee:hover { animation-play-state: paused; }
+
+/* ── Glitch ──────────────────────────────────────────────────────────────── */
+@keyframes glitch {
+  0%   { transform: translate(0); }
+  20%  { transform: translate(-4px, 1px); }
+  40%  { transform: translate(4px, -1px); }
+  60%  { transform: translate(-2px, 0); }
+  80%  { transform: translate(2px, 1px); }
+  100% { transform: translate(0); }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   .glint-text — Polished Metal Glint
+   Pure CSS. Three background layers on a single element:
+     Layer 1: glint band A  (LTR sweep, second 1)
+     Layer 2: glint band B  (LTR sweep, second 2)
+     Layer 3: glint band C  (RTL sweep, second 3)
+     Layer 4: base gradient (always visible)
+
+   background-size tracks the full 300% wide spritesheet so each band
+   only appears while it crosses the text, then exits off-edge.
+   One @keyframes drives all four layers via background-position.
+
+   Timing (3 s loop):
+     0–30%   → band A sweeps LTR  (0.9 s ease-in-out)
+     33–63%  → band B sweeps LTR  (0.9 s ease-in-out)
+     67–97%  → band C sweeps RTL  (0.9 s ease-in-out)
+     100%    → reset (bands fully off)
+───────────────────────────────────────────────────────────────────────────── */
+@keyframes metal-glint {
+  /* Band A: starts fully left (-200%), sweeps to fully right (+200%) */
+  0%   {
+    background-position:
+      -200% center,   /* A: off left  */
+       400% center,   /* B: off right */
+      -200% center,   /* C: off left  */
+      0% 0%;          /* base */
+  }
+  30%  {
+    background-position:
+       200% center,   /* A: off right */
+       400% center,
+      -200% center,
+      0% 0%;
+  }
+  /* Band B sweeps LTR */
+  33%  {
+    background-position:
+       200% center,
+      -200% center,   /* B: off left  */
+      -200% center,
+      0% 0%;
+  }
+  63%  {
+    background-position:
+       200% center,
+       200% center,   /* B: off right */
+      -200% center,
+      0% 0%;
+  }
+  /* Band C sweeps RTL */
+  67%  {
+    background-position:
+       200% center,
+       200% center,
+       200% center,   /* C: off right */
+      0% 0%;
+  }
+  97%  {
+    background-position:
+       200% center,
+       200% center,
+      -200% center,   /* C: off left  */
+      0% 0%;
+  }
+  100% {
+    background-position:
+      -200% center,
+       400% center,
+      -200% center,
+      0% 0%;
+  }
+}
+
+.glint-text {
+  /* Fallback solid colour for browsers without bg-clip */
+  color: var(--gold);
+
+  background-image:
+    /* Glint A — semi-transparent white band */
+    linear-gradient(
+      105deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.70) 50%,
+      transparent 70%
+    ),
+    /* Glint B */
+    linear-gradient(
+      105deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.70) 50%,
+      transparent 70%
+    ),
+    /* Glint C — RTL angle */
+    linear-gradient(
+      -105deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.70) 50%,
+      transparent 70%
+    ),
+    /* Base gradient: light sand top → gold mid → deep sand bottom */
+    linear-gradient(
+      180deg,
+      #EDD99A 0%,
+      #D4AF6A 45%,
+      #8A6030 100%
+    );
+
+  background-size:
+    300% 100%,   /* A — wider than element so band travels fully across */
+    300% 100%,   /* B */
+    300% 100%,   /* C */
+    100% 100%;   /* base */
+
+  background-position:
+    -200% center,
+     400% center,
+    -200% center,
+    0% 0%;
+
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+
+  animation: metal-glint 3s ease-in-out infinite;
+  display: inline-block; /* required for bg-clip to work on inline elements */
+}
+
+/* Reduced motion: show static gradient only */
+@media (prefers-reduced-motion: reduce) {
+  .glint-text {
+    animation: none;
+    background-image: linear-gradient(180deg, #EDD99A 0%, #D4AF6A 45%, #8A6030 100%);
+    background-size: 100% 100%;
+    background-position: 0% 0%;
+  }
+  .animate-marquee { animation: none; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ── Utility: fade-up init state ─────────────────────────────────────────── */
+.fade-up-init {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+/* ── Marquee Moving to the Right ────────────────────────────────────────── */
+@keyframes marquee-right {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0%); }
+}
+.animate-marquee-right {
+  animation: marquee-right 42s linear infinite;
+  will-change: transform;
+}
+.animate-marquee-right:hover,
+.animate-marquee-right:focus-within {
+  animation-play-state: paused !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   .glint-box — Interactive Glint Gradient Effect for Square/Bar Elements
+   Visible ONLY when hovered. Sweeps a metallic gold/white light sheen across
+   the surface with reduced speed (60% speed / 1.45s) for a premium polishing vibe.
+───────────────────────────────────────────────────────────────────────────── */
+.glint-box {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s ease;
+}
+
+.glint-box::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 33%,
+    rgba(255, 255, 255, 0.04) 41%,
+    rgba(212, 175, 106, 0.28) 47%,
+    rgba(255, 255, 255, 0.82) 50%,
+    rgba(212, 175, 106, 0.28) 53%,
+    rgba(255, 255, 255, 0.04) 59%,
+    transparent 67%
+  );
+  transform: translateX(-130%) translateY(-10%) rotate(-12deg);
+  opacity: 0;
+  /* Speed reduced to 60% (1.45s duration) with smooth luxury cubic-bezier */
+  transition: transform 1.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+              opacity 0.35s ease;
+  z-index: 15;
+}
+
+.glint-box:hover::before {
+  opacity: 1;
+  transform: translateX(130%) translateY(10%) rotate(-12deg);
+}
+
+.glint-box:hover {
+  border-color: rgba(212, 175, 106, 0.48) !important;
+  box-shadow: 0 16px 42px -10px rgba(0, 0, 0, 0.85),
+              0 0 26px rgba(212, 175, 106, 0.16) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   .white-glint-box — Polished White/Silver Sheen for About Craft Elements
+   Enlarges smoothly on hover with an elegant polished white metallic glint.
+───────────────────────────────────────────────────────────────────────────── */
+.white-glint-box {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s ease;
+}
+
+.white-glint-box::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.06) 42%,
+    rgba(255, 255, 255, 0.90) 50%,
+    rgba(212, 175, 106, 0.30) 53%,
+    rgba(255, 255, 255, 0.06) 58%,
+    transparent 68%
+  );
+  transform: translateX(-140%) translateY(-10%) rotate(-14deg);
+  opacity: 0;
+  transition: transform 1.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+              opacity 0.3s ease;
+  z-index: 15;
+}
+
+.white-glint-box:hover::before {
+  opacity: 1;
+  transform: translateX(140%) translateY(10%) rotate(-14deg);
+}
+
+.white-glint-box:hover {
+  transform: scale(1.05) translateY(-5px);
+  border-color: rgba(212, 175, 106, 0.55) !important;
+  box-shadow: 0 18px 44px -8px rgba(0, 0, 0, 0.92),
+              0 0 28px rgba(212, 175, 106, 0.22) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   .review-card-emit — Interactive Review Card Emission & Pop Out
+   Stops marquee on hover, lifts and expands significantly ("better and larger"),
+   radiating a cinematic golden aura and metallic glint across the card.
+───────────────────────────────────────────────────────────────────────────── */
+.review-card-emit {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s ease;
+}
+
+.review-card-emit::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.08) 42%,
+    rgba(212, 175, 106, 0.45) 48%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(212, 175, 106, 0.45) 52%,
+    rgba(255, 255, 255, 0.08) 58%,
+    transparent 65%
+  );
+  transform: translateX(-140%) translateY(-10%) rotate(-14deg);
+  opacity: 0;
+  transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.25s ease;
+  z-index: 20;
+}
+
+.review-card-emit:hover::before {
+  opacity: 1;
+  transform: translateX(140%) translateY(10%) rotate(-14deg);
+}
+
+.review-card-emit:hover {
+  transform: scale(1.07) translateY(-12px);
+  z-index: 40 !important;
+  border-color: rgba(212, 175, 106, 0.70) !important;
+  box-shadow: 0 30px 65px -10px rgba(0, 0, 0, 0.95),
+              0 0 45px 8px rgba(212, 175, 106, 0.32),
+              0 0 90px 20px rgba(212, 175, 106, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+}
