@@ -1,37 +1,42 @@
-# dependencies
+# ── Dependencies ─────────────────────────────────────────────────────────────
 /node_modules
 /.pnp
 .pnp.js
 
-# testing
-/coverage
-
-# next.js
+# ── Next.js build output ──────────────────────────────────────────────────────
 /.next/
 /out/
-
-# production
 /build
 
-# misc
+# ── Testing ───────────────────────────────────────────────────────────────────
+/coverage
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
 .DS_Store
 *.pem
+Thumbs.db
 
-# debug
+# ── Debug logs ────────────────────────────────────────────────────────────────
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
-# local env files
-.env*.local
+# ── Local environment secrets — NEVER commit these ───────────────────────────
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# vercel
+# ── Vercel ────────────────────────────────────────────────────────────────────
 .vercel
 
-# typescript
+# ── TypeScript ────────────────────────────────────────────────────────────────
 *.tsbuildinfo
 next-env.d.ts
 
-# temp video files in root (hero.mp4 is preserved in /public)
+# ── Large raw video files in root (hero.mp4 lives in /public and IS committed)
+/hero.mp4
 /2.mp4
 /Training.mp4

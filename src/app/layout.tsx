@@ -1,13 +1,33 @@
 import type { Metadata, Viewport } from "next";
+import { Space_Grotesk, Manrope } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/smooth-scroll";
 import CustomCursor from "@/components/custom-cursor";
 import AmbientGlow from "@/components/ambient-glow";
 import Navbar from "@/components/navbar";
 
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  weight: ["500", "600", "700"],
+  display: "swap",
+});
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
 // ── SEO & Share Metadata ────────────────────────────────────────────────────
+// metadataBase falls back to localhost during dev so Next.js doesn't warn
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://hokage-editorial.com"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Hokage — Cinematic Video Editor & Narrative Storyteller",
     template: "%s | Hokage Editorial",
@@ -65,7 +85,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#080605",
+  themeColor: "#0B0B0C",
 };
 
 // ── Root Layout ──────────────────────────────────────────────────────────────
@@ -75,7 +95,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${spaceGrotesk.variable} ${manrope.variable}`}>
       <body className="bg-base text-sand antialiased selection:bg-gold selection:text-base">
         {/* 35mm film noise texture */}
         <div className="noise-overlay" aria-hidden="true" />
